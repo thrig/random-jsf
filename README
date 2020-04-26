@@ -1,0 +1,47 @@
+random-jsf - Jenkins Small Fast 32-bit random number generator for Common LISP
+
+http://burtleburtle.net/bob/rand/smallprng.html
+https://www.pcg-random.org/posts/some-prng-implementations.html
+
+INSTALL
+
+Assuming Quicklisp,
+
+    cd ~/quicklisp/local-projects
+    git clone https://github.com/thrig/random-jsf
+
+or instead for ASDF maybe something like
+
+    mkdir -p ~/.local/share/common-lisp/source
+    cd ~/.local/share/common-lisp/source
+    git clone https://github.com/thrig/random-jsf
+
+then see the e.g. `generate` script for how to use it with SBCL and
+Quicklisp; ASDF will instead need something like
+
+    (require :asdf)
+    (asdf:load-system :random-jsf)
+
+
+DESCRIPTION
+
+this code is based on the above and the JSF implementation in the
+Game::Xomb Perl module and also
+
+https://github.com/thrig/randomjsf
+
+either the code is at least somewhat not terrible, or I've made the same
+mistake in multiple implementations:
+
+    $ ruby -rrandomjsf -e 'x=RandomJsf.new 42;1000.times{puts x.irand}' >a
+    $ ./generate 42 1000 >b
+    $ cmp a b && echo $?
+    0
+
+
+CAVEATS
+
+ * unsafe with multi-threaded applications, no idea how to make the seed
+   array changes atomic in such a case
+ * untested on 32-bit LISP, probably needs more LDB32 calls to support
+   that in ROT32

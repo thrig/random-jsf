@@ -1,0 +1,25 @@
+#|
+eval 'exec sbcl --script "$0" ${1+"$@"}'
+|#
+
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+
+(ql:quickload :random-jsf :silent t)
+
+(defun cli-args ()
+  #+CCL *unprocessed-command-line-arguments*
+  #+CLISP ext:*args*
+  #+SBCL (cdr *posix-argv*)    ; nix the program name
+  #-(or CCL CLISP SBCL) (error "cli-args unimplemented"))
+
+(let ((args (cli-args)))
+  (unless (= (length args) 2) (error "Usage: generate seed count"))
+  (let* ((seed (parse-integer (first args)))
+         (count (parse-integer (second args)))
+         (ctx (random-jsf:make-random-jsf seed)))
+    (loop :repeat count :do (format t "~a~%" (random-jsf:jrandom ctx)))
+    (values)))
