@@ -17,7 +17,7 @@ or instead for ASDF maybe something like
     git clone https://github.com/thrig/random-jsf
 
 then see the e.g. `generate` script for how to use it with SBCL and
-Quicklisp; ASDF will instead need something like
+Quicklisp. ASDF will instead need something like
 
     (require :asdf)
     (asdf:load-system :random-jsf)
@@ -42,6 +42,7 @@ mistake in multiple implementations:
 CAVEATS
 
  * unsafe with multi-threaded applications, no idea how to make the seed
-   array changes atomic in such a case
+   array changes atomic in such a case (lock, or isolate each seed to a
+   unique thread?)
  * untested on 32-bit LISP, probably needs more LDB32 calls to support
    that in ROT32
